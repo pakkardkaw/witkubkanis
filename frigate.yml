@@ -1,0 +1,91 @@
+mqtt:
+  # Required: host name
+  host: 192.168.1.xx
+  # Optional: port (default: shown below)
+  port: 1883
+  # Optional: topic prefix (default: shown below)
+  # WARNING: must be unique if you are running multiple instances
+  topic_prefix: frigate
+  # Optional: client id (default: shown below)
+  # WARNING: must be unique if you are running multiple instances
+  client_id: frigate
+  # Optional: user
+  user: mqttuser  xxxxxxx
+  # Optional: password
+  # NOTE: Environment variables that begin with 'FRIGATE_' may be referenced in {}.
+  #       eg. password: '{FRIGATE_MQTT_PASSWORD}'
+  password: xxxxxxxxxx
+  # Optional: interval in seconds for publishing stats (default: shown below)
+  stats_interval: 60
+
+cameras:
+  # Name of your camera
+  front_door:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:xxxxxxx@192.168.1.xxx:554/
+          roles:
+            - detect
+            - clips
+            - record
+            - rtmp
+    width: 1920
+    height: 1080
+    fps: 30
+    detect:
+      enabled: True
+    clips:
+      enabled: True
+    rtmp:
+      enabled: True
+    snapshots:
+      enabled: True
+   
+    
+record:
+  # Optional: Enable recording
+  enabled: False
+  # Optional: Number of days to retain
+  retain_days: 1
+  
+objects:
+  # Optional: list of objects to track from labelmap.txt (default: shown below)
+  track:
+    - person
+  # Optional: filters to reduce false positives for specific object types
+  filters:
+    person:
+      # Optional: minimum width*height of the bounding box for the detected object (default: 0)
+      #min_area: 5000
+      # Optional: maximum width*height of the bounding box for the detected object (default: 24000000)
+      #max_area: 100000
+      # Optional: minimum score for the object to initiate tracking (default: shown below)
+      min_score: 0.5
+      # Optional: minimum decimal percentage for tracked object's computed score to be considered a true positive (default: shown below)
+      threshold: 0.7
+detectors:
+#  cpu1:
+#    type: cpu
+#  cpu2:
+#    type: cpu
+  coral:
+    type: edgetpu
+    device: usb
+    
+clips:
+  # Optional: Maximum length of time to retain video during long events. (default: shown below)
+  # NOTE: If an object is being tracked for longer than this amount of time, the cache
+  #       will begin to expire and the resulting clip will be the last x seconds of the event.
+  max_seconds: 60
+  # Optional: size of tmpfs mount to create for cache files (default: not set)
+  # mount -t tmpfs -o size={tmpfs_cache_size} tmpfs /tmp/cache
+  # NOTICE: Addon users must have Protection mode disabled for the addon when using this setting.
+  # Also, if you have mounted a tmpfs volume through docker, this value should not be set in your config.
+  tmpfs_cache_size: 256m
+  # Optional: Retention settings for clips (default: shown below)
+  retain:
+    # Required: Default retention days (default: shown below)
+    default: 2
+    # Optional: Per object retention days
+    objects:
+      person: 2
