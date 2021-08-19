@@ -44,13 +44,13 @@ cameras:
         - person
       retain:
         # Required: Default retention days (default: shown below)
-        default: 10
+        default: 2
         # Optional: Per object retention days
         objects:
-          person: 15
+          person: 2
     record:
       enabled: False
-      retain_days: 30
+      retain_days: 2
     
     rtmp:
       enabled: True
@@ -66,10 +66,10 @@ cameras:
       #height: 270
       retain:
         # Required: Default retention days (default: shown below)
-        default: 10
+        default: 2
         # Optional: Per object retention days
         objects:
-          person: 15
+          person: 2
     mqtt:
       # Optional: Enable publishing snapshot via mqtt for camera (default: shown below)
       # NOTE: Only applies to publishing image data to MQTT via 'frigate/<camera_name>/<object_name>/snapshot'.
